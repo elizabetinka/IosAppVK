@@ -4,9 +4,11 @@ import Foundation
 final class ReviewsProvider {
 
     private let bundle: Bundle
+    private let decoder: JSONDecoder
 
-    init(bundle: Bundle = .main) {
+    init(bundle: Bundle = .main, decoder: JSONDecoder = JSONDecoder()) {
         self.bundle = bundle
+        self.decoder = decoder
     }
 
 }
@@ -15,7 +17,7 @@ final class ReviewsProvider {
 
 extension ReviewsProvider {
 
-    typealias GetReviewsResult = Result<Data, GetReviewsError>
+    typealias GetReviewsResult = Result<Reviews, GetReviewsError>
 
     enum GetReviewsError: Error {
 
@@ -24,7 +26,7 @@ extension ReviewsProvider {
 
     }
 
-    func getReviews(offset: Int = 0, completion: @escaping (GetReviewsResult) -> Void) {
+    func getReviews(offset: Int = 0,limit: Int = 20, completion: @escaping (GetReviewsResult) -> Void) {
         guard let url = bundle.url(forResource: "getReviews.response", withExtension: "json") else {
             return completion(.failure(.badURL))
         }
@@ -34,7 +36,9 @@ extension ReviewsProvider {
 
         do {
             let data = try Data(contentsOf: url)
-            completion(.success(data))
+            var reviews = try decoder.decode(Reviews.self, from: data)
+            var items = reviews.items.prefix(limit)
+            completion(.success(Reviews(items: Array(items), count: reviews.count)))
         } catch {
             completion(.failure(.badData(error)))
         }

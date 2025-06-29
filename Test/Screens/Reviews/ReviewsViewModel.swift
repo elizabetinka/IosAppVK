@@ -38,7 +38,7 @@ extension ReviewsViewModel {
     func getReviews() {
         guard state.shouldLoad else { return }
         state.shouldLoad = false
-        reviewsProvider.getReviews(offset: state.offset, completion: gotReviews)
+        reviewsProvider.getReviews(offset: state.offset,limit: state.limit, completion: gotReviews)
     }
 
 }
@@ -49,15 +49,19 @@ private extension ReviewsViewModel {
 
     /// Метод обработки получения отзывов.
     func gotReviews(_ result: ReviewsProvider.GetReviewsResult) {
-        do {
-            let data = try result.get()
-            let reviews = try decoder.decode(Reviews.self, from: data)
+        switch result {
+        case .failure:
+            state.shouldLoad = true
+        case .success(let reviews):
             state.items += reviews.items.map(makeReviewItem)
             state.offset += state.limit
             state.shouldLoad = state.offset < reviews.count
-        } catch {
-            state.shouldLoad = true
+            
+            if (!state.shouldLoad){
+                state.items.append(makeReviewCountItem(reviews.count))
+            }
         }
+        
         onStateChange?(state)
     }
     
@@ -114,6 +118,7 @@ private extension ReviewsViewModel {
 private extension ReviewsViewModel {
 
     typealias ReviewItem = ReviewCellConfig
+    typealias ReviewCountItem = ReviewCountCellConfig
 
     func makeReviewItem(_ review: Review) -> ReviewItem {
         let reviewText = review.text.attributed(font: .text)
@@ -146,6 +151,31 @@ private extension ReviewsViewModel {
         }
         return item
     }
+    
+    func makeReviewCountItem(_ count: Int) -> ReviewCountItem {
+        let reviewCountString=String(count)+" " + reviewWord(for: count)
+        let reviewCount = reviewCountString.attributed(font: .reviewCount, color: .reviewCount)
+        return ReviewCountItem(reviewCount: reviewCount)
+    }
+    
+    
+    func reviewWord(for count: Int) -> String {
+        let remainder100 = count % 100
+        let remainder10 = count % 10
+
+        if remainder100 >= 11 && remainder100 <= 14 {
+            return "отзывов"
+        }
+
+        switch remainder10 {
+        case 1:
+            return "отзыв"
+        case 2...4:
+            return "отзыва"
+        default:
+            return "отзывов"
+        }
+    }
 
 }
 
@@ -158,6 +188,7 @@ extension ReviewsViewModel: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let config = state.items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: config.reuseId, for: indexPath)
         config.update(cell: cell)
