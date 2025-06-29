@@ -8,17 +8,20 @@ final class ReviewsViewModel: NSObject {
 
     private var state: State
     private let reviewsProvider: ReviewsProvider
+    private let photoProvider: PhotoProvider
     private let ratingRenderer: RatingRenderer
     private let decoder: JSONDecoder
 
     init(
         state: State = State(),
         reviewsProvider: ReviewsProvider = ReviewsProvider(),
+        photoProvider: PhotoProvider = PhotoProvider(),
         ratingRenderer: RatingRenderer = RatingRenderer(),
         decoder: JSONDecoder = JSONDecoder()
     ) {
         self.state = state
         self.reviewsProvider = reviewsProvider
+        self.photoProvider = photoProvider
         self.ratingRenderer = ratingRenderer
         self.decoder = decoder
     }
@@ -57,6 +60,40 @@ private extension ReviewsViewModel {
         }
         onStateChange?(state)
     }
+    
+    /// Метод обработки получения фотографии
+    func gotAvatarPhoto(_ result: PhotoProvider.GetPhotoResult, with id : UUID) {
+        guard
+            let index = state.items.firstIndex(where: { ($0 as? ReviewItem)?.id == id }),
+            var item = state.items[index] as? ReviewItem
+        else { return }
+        
+        switch result {
+            case .success(let image):
+            item.avatar = image
+            state.items[index]=item
+            onStateChange?(state)
+        case .failure:
+            break
+        }
+    }
+    
+    /// Метод обработки получения фотографии
+    func gotReviewPhoto(_ result: PhotoProvider.GetPhotoResult, with id : UUID, at idx: Int) {
+        guard
+            let index = state.items.firstIndex(where: { ($0 as? ReviewItem)?.id == id }),
+            var item = state.items[index] as? ReviewItem
+        else { return }
+        
+        switch result {
+            case .success(let image):
+            item.photos[idx]=image
+            state.items[index]=item
+            onStateChange?(state)
+        case .failure:
+            break
+        }
+    }
 
     /// Метод, вызываемый при нажатии на кнопку "Показать полностью...".
     /// Снимает ограничение на количество строк текста отзыва (раскрывает текст).
@@ -81,11 +118,32 @@ private extension ReviewsViewModel {
     func makeReviewItem(_ review: Review) -> ReviewItem {
         let reviewText = review.text.attributed(font: .text)
         let created = review.created.attributed(font: .created, color: .created)
+        let username = (review.firstName+" "+review.lastName).attributed(font: .username)
+        let avatar = UIImage.defaultAvatar
+        let photos: [UIImage?] = (0..<review.photoURLs.count).map { _ in nil }
+        let rating = ratingRenderer.ratingImage(review.rating)
+
         let item = ReviewItem(
             reviewText: reviewText,
             created: created,
-            onTapShowMore: showMoreReview
+            onTapShowMore: showMoreReview,
+            username: username,
+            avatar: avatar,
+            photos: photos,
+            rating: rating
         )
+        
+        if let avatarURL = review.avatarURL {
+            photoProvider.getPhoto(url: avatarURL) { result in
+                self.gotAvatarPhoto(result, with: item.id)
+            }
+        }
+        
+        for (index, photoURL) in review.photoURLs.enumerated() {
+            photoProvider.getPhoto(url: photoURL) { result in
+                self.gotReviewPhoto(result, with: item.id, at: index)
+            }
+        }
         return item
     }
 
