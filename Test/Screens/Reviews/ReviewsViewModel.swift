@@ -55,19 +55,19 @@ private extension ReviewsViewModel {
     /// Метод обработки получения отзывов.
     func gotReviews(_ result: ReviewsProvider.GetReviewsResult) {
         switch result {
-        case .failure:
-            state.shouldLoad = true
+        case .failure(let error):
+            state.error = error
         case .success(let reviews):
             state.items += reviews.items.map(makeReviewItem)
             state.offset += state.limit
             state.shouldLoad = state.offset < reviews.count
             state.isLoading = false
+            state.error = nil
             
             if (!state.shouldLoad){
                 state.items.append(makeReviewCountItem(reviews.count))
             }
         }
-        
         onStateChange?(state)
     }
     
@@ -242,6 +242,18 @@ extension ReviewsViewModel: UITableViewDelegate {
 extension ReviewsViewModel: RefreshDelegate {
     
     func refresh() {
+        state.reset()
+        onStateChange?(state)
+        getReviews()
+    }
+
+}
+
+// MARK: - ErrorDelegate
+
+extension ReviewsViewModel: ErrorDelegate {
+    
+    func reload() {
         state.reset()
         onStateChange?(state)
         getReviews()

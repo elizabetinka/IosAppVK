@@ -36,6 +36,9 @@ private extension ReviewsViewController {
         reviewsView.tableView.delegate = viewModel
         reviewsView.tableView.dataSource = viewModel
         reviewsView.refreshDelegate = viewModel
+        reviewsView.showError = { [weak self] error in
+            self?.showError(error: error)
+        }
         return reviewsView
     }
 
@@ -45,6 +48,16 @@ private extension ReviewsViewController {
                 reviewsView?.reloadData(state: state)
             }
         }
+    }
+    
+    func showError(error: Error){
+        let alert = UIAlertController(
+                title: "Ошибка",
+                message: error.localizedDescription,
+                preferredStyle: .alert
+            )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
 }

@@ -7,6 +7,7 @@ struct ReviewsViewModelState {
     var shouldLoad = true
     /// переменная показывает мы уже загрузили какие-то данные, или еще грузим
     var isLoading = true
+    var error: Error? = nil
     
     mutating func reset() {
         items.removeAll()
@@ -14,6 +15,7 @@ struct ReviewsViewModelState {
         offset = 0
         shouldLoad = true
         isLoading = true
+        error = nil
     }
 
 }

@@ -6,6 +6,9 @@ final class ReviewsView: UIView {
     let refreshControl = UIRefreshControl()
     var refreshDelegate: RefreshDelegate?
     let activityIndicator = MyActivityIndicator(size: .medium, style: .triangle )
+    
+    /// Замыкание, вызываемое, когда надо показать ошибку.
+    var showError: ((Error) -> Void)?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -22,6 +25,11 @@ final class ReviewsView: UIView {
     }
     
     func reloadData(state: ReviewsViewModelState) {
+        if let error = state.error {
+            showError?(error);
+            return
+        }
+        
         if state.isLoading {
             startLoading()
         } else {
