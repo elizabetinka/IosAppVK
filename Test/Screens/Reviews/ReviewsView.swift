@@ -5,7 +5,7 @@ final class ReviewsView: UIView {
     let tableView = UITableView()
     let refreshControl = UIRefreshControl()
     var refreshDelegate: RefreshDelegate?
-    let activityIndicator = UIActivityIndicatorView(style: .large)
+    let activityIndicator = MyActivityIndicator(size: .medium, style: .triangle )
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
