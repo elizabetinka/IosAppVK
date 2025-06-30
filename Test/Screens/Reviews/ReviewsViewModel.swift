@@ -56,6 +56,7 @@ private extension ReviewsViewModel {
             state.items += reviews.items.map(makeReviewItem)
             state.offset += state.limit
             state.shouldLoad = state.offset < reviews.count
+            state.isLoading = false
             
             if (!state.shouldLoad){
                 state.items.append(makeReviewCountItem(reviews.count))
@@ -190,7 +191,6 @@ extension ReviewsViewModel: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let config = state.items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: config.reuseId, for: indexPath)
         config.update(cell: cell)
@@ -227,7 +227,19 @@ extension ReviewsViewModel: UITableViewDelegate {
         let contentHeight = scrollView.contentSize.height
         let triggerDistance = viewHeight * screensToLoadNextPage
         let remainingDistance = contentHeight - viewHeight - targetOffsetY
-        return remainingDistance <= triggerDistance
+        return (remainingDistance <= triggerDistance) && (!state.isLoading)
+    }
+
+}
+
+// MARK: - RefreshDelegate
+
+extension ReviewsViewModel: RefreshDelegate {
+    
+    func refresh() {
+        state.reset()
+        onStateChange?(state)
+        getReviews()
     }
 
 }

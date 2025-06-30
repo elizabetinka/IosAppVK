@@ -35,13 +35,14 @@ private extension ReviewsViewController {
         let reviewsView = ReviewsView()
         reviewsView.tableView.delegate = viewModel
         reviewsView.tableView.dataSource = viewModel
+        reviewsView.refreshDelegate = viewModel
         return reviewsView
     }
 
     func setupViewModel() {
-        viewModel.onStateChange = { [weak reviewsView] _ in
+        viewModel.onStateChange = { [weak reviewsView] state in
             DispatchQueue.main.async {
-                reviewsView?.tableView.reloadData()
+                reviewsView?.reloadData(state: state)
             }
         }
     }

@@ -3,6 +3,8 @@ import UIKit
 final class ReviewsView: UIView {
 
     let tableView = UITableView()
+    let refreshControl = UIRefreshControl()
+    var refreshDelegate: RefreshDelegate?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -16,6 +18,13 @@ final class ReviewsView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         tableView.frame = bounds.inset(by: safeAreaInsets)
+    }
+    
+    func reloadData(state: ReviewsViewModelState) {
+        if !state.isLoading {
+            refreshControl.endRefreshing()
+        }
+        tableView.reloadData()
     }
 
 }
@@ -35,6 +44,14 @@ private extension ReviewsView {
         tableView.allowsSelection = false
         tableView.register(ReviewCell.self, forCellReuseIdentifier: ReviewCellConfig.reuseId)
         tableView.register(ReviewCountCell.self, forCellReuseIdentifier: ReviewCountCellConfig.reuseId)
+        
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+    }
+    
+    
+    @objc private func refresh() {
+        refreshDelegate?.refresh()
     }
 
 }
