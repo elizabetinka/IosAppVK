@@ -18,6 +18,8 @@ struct ReviewCellConfig {
     let created: NSAttributedString
     /// Замыкание, вызываемое при нажатии на кнопку "Показать полностью...".
     let onTapShowMore: (UUID) -> Void
+    /// Замыкание, вызываемое при нажатии на фотографию.
+    let onTapPhoto: ([UIImage?], Int) -> Void
     /// Имя+Фамилия пользователя
     let username: NSAttributedString
     /// аватар пользователя
@@ -167,10 +169,15 @@ private extension ReviewCell {
     
     func setupPhotos() {
         
-        photos.forEach {
-            contentView.addSubview($0)
-            $0.layer.cornerRadius = Layout.photoCornerRadius
-            $0.clipsToBounds = true
+        for (index, photo) in photos.enumerated() {
+            addSubview(photo)
+            photo.layer.cornerRadius = Layout.photoCornerRadius
+            photo.clipsToBounds = true
+            photo.isUserInteractionEnabled = true
+
+            photo.tag = index
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapPhoto(_:)))
+            photo.addGestureRecognizer(tapGesture)
         }
 
         photoActivityIndicators.forEach {
@@ -189,6 +196,15 @@ private extension ReviewCell {
     @objc private func didTapShowMore() {
         if let config = config {
             config.onTapShowMore(config.id)
+        }
+    }
+    
+    @objc private func didTapPhoto(_ sender: UITapGestureRecognizer) {
+        guard let tappedImageView = sender.view as? UIImageView else { return }
+        let index = tappedImageView.tag
+        let images: [UIImage?] = photos.map { $0.image }
+        if let config = config {
+            config.onTapPhoto(images, index)
         }
     }
 

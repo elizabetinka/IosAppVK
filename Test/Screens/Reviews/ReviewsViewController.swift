@@ -48,6 +48,12 @@ private extension ReviewsViewController {
                 reviewsView?.reloadData(state: state)
             }
         }
+        
+        viewModel.onPhotoTapped = { [weak self] photos, index in
+            DispatchQueue.main.async {
+                self?.showPhoto(photos: photos, startIndex: index)
+            }
+        }
     }
     
     func showError(error: Error){
@@ -58,6 +64,11 @@ private extension ReviewsViewController {
             )
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    func showPhoto(photos: [UIImage?], startIndex: Int){
+        let viewController = PhotosViewController(photos: photos, startIndex: startIndex)
+        present(viewController, animated: true)
     }
 
 }

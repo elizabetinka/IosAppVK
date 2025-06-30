@@ -13,6 +13,8 @@
 		0B86D8C02E11E9890091E823 /* ReviewsCountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B86D8BF2E11E9890091E823 /* ReviewsCountCell.swift */; };
 		0BC49FCE2E12AC1100F58A38 /* RefreshDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC49FCD2E12AC0500F58A38 /* RefreshDelegate.swift */; };
 		0BC49FD12E12C69A00F58A38 /* MyActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC49FD02E12C68F00F58A38 /* MyActivityIndicator.swift */; };
+		0BCBB9EA2E12E09E004D1D75 /* ErrorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCBB9E92E12E09E004D1D75 /* ErrorDelegate.swift */; };
+		0BCBB9ED2E12E8F8004D1D75 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCBB9EC2E12E8F8004D1D75 /* PhotosViewController.swift */; };
 		2166686F2D48E23F009AAA76 /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2166686E2D48E23F009AAA76 /* Fonts.swift */; };
 		216668712D48E4B2009AAA76 /* NSAttributedString+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216668702D48E4B2009AAA76 /* NSAttributedString+Ext.swift */; };
 		216668732D48E89A009AAA76 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216668722D48E89A009AAA76 /* Colors.swift */; };
@@ -43,6 +45,8 @@
 		0B86D8BF2E11E9890091E823 /* ReviewsCountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsCountCell.swift; sourceTree = "<group>"; };
 		0BC49FCD2E12AC0500F58A38 /* RefreshDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshDelegate.swift; sourceTree = "<group>"; };
 		0BC49FD02E12C68F00F58A38 /* MyActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyActivityIndicator.swift; sourceTree = "<group>"; };
+		0BCBB9E92E12E09E004D1D75 /* ErrorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorDelegate.swift; sourceTree = "<group>"; };
+		0BCBB9EC2E12E8F8004D1D75 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		2166686E2D48E23F009AAA76 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		216668702D48E4B2009AAA76 /* NSAttributedString+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Ext.swift"; sourceTree = "<group>"; };
 		216668722D48E89A009AAA76 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
@@ -95,10 +99,19 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		0BCBB9EB2E12E8F2004D1D75 /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				0BCBB9EC2E12E8F8004D1D75 /* PhotosViewController.swift */,
+			);
+			path = Photo;
+			sourceTree = "<group>";
+		};
 		2166686D2D48DEBF009AAA76 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
 				0BC49FCD2E12AC0500F58A38 /* RefreshDelegate.swift */,
+				0BCBB9E92E12E09E004D1D75 /* ErrorDelegate.swift */,
 				21B841702D47C5F00085DAA2 /* TableCellConfig.swift */,
 			);
 			path = Protocols;
@@ -160,6 +173,7 @@
 		21B82E2A2D47B0640085DAA2 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				0BCBB9EB2E12E8F2004D1D75 /* Photo */,
 				21ED1F632D69CF860012D6F6 /* Root */,
 				21B82E372D47B1090085DAA2 /* Reviews */,
 			);
@@ -312,9 +326,11 @@
 				21B8416B2D47BFA10085DAA2 /* Reviews.swift in Sources */,
 				21B82E302D47B0640085DAA2 /* ReviewsViewController.swift in Sources */,
 				2166A0F42D4A5B25009AAA76 /* ReviewsView.swift in Sources */,
+				0BCBB9ED2E12E8F8004D1D75 /* PhotosViewController.swift in Sources */,
 				0B86D8C02E11E9890091E823 /* ReviewsCountCell.swift in Sources */,
 				216668732D48E89A009AAA76 /* Colors.swift in Sources */,
 				21B841712D47C5F00085DAA2 /* TableCellConfig.swift in Sources */,
+				0BCBB9EA2E12E09E004D1D75 /* ErrorDelegate.swift in Sources */,
 				21ED1F652D69D0340012D6F6 /* ReviewsScreenFactory.swift in Sources */,
 				0BC49FD12E12C69A00F58A38 /* MyActivityIndicator.swift in Sources */,
 				2166686F2D48E23F009AAA76 /* Fonts.swift in Sources */,

@@ -5,6 +5,8 @@ final class ReviewsViewModel: NSObject {
 
     /// Замыкание, вызываемое при изменении `state`.
     var onStateChange: ((State) -> Void)?
+    /// Замыкание, вызываемое при нажатии на фото отзыва.
+    var onPhotoTapped: (([UIImage?], Int) -> Void)?
 
     private var state: State
     private let reviewsProvider: ReviewsProvider
@@ -139,6 +141,9 @@ private extension ReviewsViewModel {
             created: created,
             onTapShowMore: { [weak self] id in
                 self?.showMoreReview(with: id)
+            },
+            onTapPhoto: { [weak self] photos, index in
+                self?.onPhotoTapped?(photos, index)
             },
             username: username,
             avatar: avatar,
