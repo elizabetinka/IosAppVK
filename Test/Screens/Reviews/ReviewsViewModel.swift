@@ -33,12 +33,10 @@ final class ReviewsViewModel: NSObject {
 extension ReviewsViewModel {
 
     typealias State = ReviewsViewModelState
-
-    /// Метод получения отзывов.
-    func getReviews() {
-        guard state.shouldLoad else { return }
-        state.shouldLoad = false
-        reviewsProvider.getReviews(offset: state.offset,limit: state.limit, completion: gotReviews)
+    
+    func start() {
+        onStateChange?(state)
+        getReviews()
     }
 
 }
@@ -46,6 +44,13 @@ extension ReviewsViewModel {
 // MARK: - Private
 
 private extension ReviewsViewModel {
+    
+    /// Метод получения отзывов.
+    func getReviews() {
+        guard state.shouldLoad else { return }
+        state.shouldLoad = false
+        reviewsProvider.getReviews(offset: state.offset,limit: state.limit, completion: gotReviews)
+    }
 
     /// Метод обработки получения отзывов.
     func gotReviews(_ result: ReviewsProvider.GetReviewsResult) {

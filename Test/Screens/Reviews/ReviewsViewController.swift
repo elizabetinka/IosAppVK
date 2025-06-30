@@ -22,7 +22,7 @@ final class ReviewsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewModel()
-        viewModel.getReviews()
+        viewModel.start()
     }
 
 }
