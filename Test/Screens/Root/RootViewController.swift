@@ -1,8 +1,10 @@
 import UIKit
 
 final class RootViewController: UIViewController {
-
-    private lazy var rootView = RootView(onTapReviews: openReviews)
+    
+    private lazy var rootView = RootView(onTapReviews: { [weak self] in
+        self?.openReviews()
+    })
 
     override func loadView() {
         view = rootView
