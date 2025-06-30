@@ -65,6 +65,7 @@ extension ReviewCellConfig: TableCellConfig {
                 cell.photoActivityIndicators[index].startAnimating()
             }
         }
+        
         cell.config = self
     }
 
@@ -73,7 +74,6 @@ extension ReviewCellConfig: TableCellConfig {
     func height(with size: CGSize) -> CGFloat {
         layout.height(config: self, maxWidth: size.width)
     }
-
 }
 
 // MARK: - Private
@@ -182,6 +182,14 @@ private extension ReviewCell {
         contentView.addSubview(showMoreButton)
         showMoreButton.contentVerticalAlignment = .fill
         showMoreButton.setAttributedTitle(Config.showMoreText, for: .normal)
+        showMoreButton.addTarget(self, action: #selector(didTapShowMore), for: .touchUpInside)
+    }
+    
+
+    @objc private func didTapShowMore() {
+        if let config = config {
+            config.onTapShowMore(config.id)
+        }
     }
 
 }
